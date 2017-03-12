@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace PoeBot_A {
-    internal class WhisperHandler {
+    public class WhisperHandler {
         public delegate void Handler(DateTime date, string name, string message);
 
         public static event Handler NewMessage;
@@ -36,7 +36,7 @@ namespace PoeBot_A {
 
         private static void HandleLog() {
             var whisperRegex = new Regex(@"(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}) .*@From (?:<.+> )?([a-zA-Zа-яА-ЯёЁ]{3,32}): (.+)\r\n");
-
+            
             var stream = File.Open(@"C:\Program Files (x86)\Grinding Gear Games\Path of Exile\logs\Client.txt", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
             var reader = new StreamReader(stream); 

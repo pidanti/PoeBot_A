@@ -1,42 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 
-namespace ReadLogPOE {
-    class WhisperHandler {
+namespace PoeBot_A {
+    internal class WhisperHandler {
         public delegate void Handler(DateTime date, string name, string message);
 
         public static event Handler NewMessage;
 
-        private const int delay = 200;
+        private const int Delay = 200;
 
-        private static bool shouldStop = false;
+        private static bool _shouldStop;
 
-        private static int threadCount = 0;
-        private const int maxThreadCount = 10;
+        private static int _threadCount;
+        private const int MaxThreadCount = 10;
 
         static WhisperHandler() {
             Restart();
         }
 
         public static void Stop() {
-            shouldStop = true;
+            _shouldStop = true;
         }
 
         public static void Restart() {
 
-            if (threadCount > maxThreadCount) {
+            if (_threadCount > MaxThreadCount) {
                 throw new Exception("Too many WhisperHandler threads");
             }
 
-            threadCount++;
+            _threadCount++;
             new Thread(HandleLog).Start();
         }
 
@@ -50,9 +44,9 @@ namespace ReadLogPOE {
             //pass to end
             reader.ReadToEnd();
             
-            while (!shouldStop) {
+            while (!_shouldStop) {
 
-                Thread.Sleep(delay);
+                Thread.Sleep(Delay);
 
                 //can be broken while poe is logging 
                 var text = reader.ReadToEnd();
